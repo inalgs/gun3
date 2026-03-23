@@ -45,6 +45,7 @@ function hideMessage() {
 }
 
 // Auth mode toggle
+const toggleText = document.getElementById("toggle-text");
 toggleLink.addEventListener("click", (e) => {
     e.preventDefault();
     isLoginMode = !isLoginMode;
@@ -52,11 +53,11 @@ toggleLink.addEventListener("click", (e) => {
     if (isLoginMode) {
         authSubmit.textContent = "Giriş Yap";
         toggleLink.textContent = "Kayıt Ol";
-        toggleLink.previousSibling.textContent = "Hesabın yok mu? ";
+        toggleText.textContent = "Hesabın yok mu? ";
     } else {
         authSubmit.textContent = "Kayıt Ol";
         toggleLink.textContent = "Giriş Yap";
-        toggleLink.previousSibling.textContent = "Zaten hesabın var mı? ";
+        toggleText.textContent = "Zaten hesabın var mı? ";
     }
 });
 
@@ -74,7 +75,7 @@ authForm.addEventListener("submit", async (e) => {
             body: JSON.stringify({ email, password })
         });
         const data = await res.json();
-        if (data.error) {
+        if (!res.ok) {
             showMessage(data.error_description || data.msg || "Giriş başarısız.", "error");
         } else {
             accessToken = data.access_token;
@@ -89,7 +90,7 @@ authForm.addEventListener("submit", async (e) => {
             body: JSON.stringify({ email, password })
         });
         const data = await res.json();
-        if (data.error) {
+        if (!res.ok) {
             showMessage(data.error_description || data.msg || "Kayıt başarısız.", "error");
         } else if (data.identities && data.identities.length === 0) {
             showMessage("Bu e-posta zaten kayıtlı.", "error");
