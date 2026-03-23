@@ -170,9 +170,12 @@ async function addTodo(text) {
         headers: authHeaders(),
         body: JSON.stringify({ text, done: false })
     });
-    const [todo] = await res.json();
-    todos.push(todo);
-    render();
+    if (!res.ok) return;
+    const data = await res.json();
+    if (data.length) {
+        todos.push(data[0]);
+        render();
+    }
 }
 
 async function updateTodo(id, updates) {
